@@ -71,7 +71,7 @@ export default function StopWatch() {
 
   return (
     <div>
-      <div className="p-6">
+      <div className="p-8">
         <span className="text-6xl">{seconds}</span>
         <span className="text-3xl">s</span>
         <div className="inline-block mr-4" />

@@ -18,13 +18,9 @@ export default function TabView({
   onTabChange,
   renderTab,
 }: TabViewProps) {
-  const innerRenderTab = (tabKey: string) => {
-    return renderTab(tabKey);
-  };
-
   return (
     <div>
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-400">
+      <div className="text-sm font-medium text-center text-gray-400 border-b border-gray-300">
         <ul className="w-full flex flex-wrap -mb-px">
           {tabs.map((tab, i) => {
             return (
@@ -55,11 +51,11 @@ export default function TabView({
                   hidden: tab.key !== activeKey,
                 })}
               >
-                {innerRenderTab(tab.key)}
+                {renderTab(tab.key)}
               </div>
             );
           })}
-        {unmountOnChange && innerRenderTab(activeKey)}
+        {unmountOnChange && renderTab(activeKey)}
       </div>
     </div>
   );
