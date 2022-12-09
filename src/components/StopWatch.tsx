@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import ButtonGroup from "./ButtonGroup";
 
 enum StopWatchState {
@@ -35,6 +35,7 @@ const getPrimaryButtonTitle = (stopWatchState: StopWatchState) => {
 const TICK = 10;
 export default function StopWatch() {
   const intervalRef = useRef<{ interval?: any }>({});
+  const ticksSpanRef = useRef<HTMLSpanElement>(null);
   const [milisecs, setMilisecs] = useState(0);
   const [stopWatchState, setStopWatchState] = useState(StopWatchState.Idle);
 
@@ -72,19 +73,34 @@ export default function StopWatch() {
   return (
     <div>
       <div className="p-8">
-        <span className="text-6xl">{seconds}</span>
-        <span className="text-3xl">s</span>
-        <div className="inline-block mr-4" />
-        <span className="text-4xl">{ticks < 10 ? "0" + ticks : ticks}</span>
+        {useMemo(
+          () => (
+            <>
+              <span className="text-6xl">{seconds}</span>
+              <span className="text-3xl">s</span>
+              <div className="inline-block mr-4" />
+            </>
+          ),
+          [seconds]
+        )}
+
+        <span ref={ticksSpanRef} className="text-4xl">
+          {ticks < 10 ? "0" + ticks : ticks}
+        </span>
       </div>
-      <div className="p-4 border-t border-gray-400">
-        <ButtonGroup
-          primaryTitle={getPrimaryButtonTitle(stopWatchState)}
-          onPrimaryClick={handlePrimaryBtnClick}
-          secondaryTitle={"RESET"}
-          onSecondaryClick={resetStopWatch}
-        />
-      </div>
+      {useMemo(
+        () => (
+          <div className="p-4 border-t border-gray-400">
+            <ButtonGroup
+              primaryTitle={getPrimaryButtonTitle(stopWatchState)}
+              onPrimaryClick={handlePrimaryBtnClick}
+              secondaryTitle={"RESET"}
+              onSecondaryClick={resetStopWatch}
+            />
+          </div>
+        ),
+        [stopWatchState]
+      )}
     </div>
   );
 }

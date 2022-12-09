@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import ButtonGroup from "./../ButtonGroup";
 import TimerInput from "./TimerInput";
 
@@ -40,7 +40,7 @@ const convertToTimeObj = (milisecs: number) => {
 };
 
 const convertTimeUnitToString = (timeUnit: number) => {
-  return timeUnit < 10 ? "0" + timeUnit : timeUnit;
+  return timeUnit < 10 ? timeUnit.toString().padStart(2, "0") : timeUnit;
 };
 
 const initialMilisecs = 5 * 60 * 1000;
@@ -116,34 +116,54 @@ export default function Timer() {
     <div>
       <div className="p-8" onClick={hideTimerInput}>
         <div className="w-fit">
-          {isTimerInputPresent ? (
+          {isTimerInputPresent && (
             <div onClick={(e) => e.stopPropagation()}>
               <TimerInput onEdit={handleTimerInputChange} />
             </div>
-          ) : (
-            <div className="cursor-pointer" onClick={showTimerInput}>
-              <div className={clsx("inline-block mr-4", { hidden: !hours })}>
-                <span className="text-6xl">
-                  {convertTimeUnitToString(hours)}
-                </span>
-                <span className="text-3xl">h</span>
-              </div>
-
-              <div className={clsx("inline-block mr-4", { hidden: !minutes })}>
-                <span className="text-6xl">
-                  {convertTimeUnitToString(minutes)}
-                </span>
-                <span className="text-3xl">m</span>
-              </div>
-
-              <div className="inline-block mr-4">
-                <span className="text-6xl">
-                  {convertTimeUnitToString(seconds)}
-                </span>
-                <span className="text-3xl">s</span>
-              </div>
-            </div>
           )}
+          <div className="cursor-pointer" onClick={showTimerInput}>
+            {useMemo(
+              () => (
+                <div
+                  className={clsx("inline-block", {
+                    hidden: isTimerInputPresent,
+                  })}
+                >
+                  <div
+                    className={clsx("inline-block mr-4", { hidden: !hours })}
+                  >
+                    <span className="text-6xl">
+                      {convertTimeUnitToString(hours)}
+                    </span>
+                    <span className="text-3xl">h</span>
+                  </div>
+
+                  <div
+                    className={clsx("inline-block mr-4", {
+                      hidden: !minutes,
+                    })}
+                  >
+                    <span className="text-6xl">
+                      {convertTimeUnitToString(minutes)}
+                    </span>
+                    <span className="text-3xl">m</span>
+                  </div>
+                </div>
+              ),
+              [minutes, hours, isTimerInputPresent]
+            )}
+
+            <div
+              className={clsx("inline-block mr-4", {
+                hidden: isTimerInputPresent,
+              })}
+            >
+              <span className="text-6xl">
+                {convertTimeUnitToString(seconds)}
+              </span>
+              <span className="text-3xl">s</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className="relative p-4 border-t border-gray-300">

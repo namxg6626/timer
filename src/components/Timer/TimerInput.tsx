@@ -9,9 +9,7 @@ interface TimerInputProps {
  */
 const extractTimeString = (timeString: string): string[] => {
   const TIME_STRING_MAX_LENGTH = 6;
-  const paddingLength = TIME_STRING_MAX_LENGTH - timeString.length;
-  const paddingString = new Array(paddingLength).fill("0").join("");
-  const paddedTimeString = paddingString + timeString;
+  const paddedTimeString = timeString.padStart(TIME_STRING_MAX_LENGTH, "0");
   const splitTimeStringRegex = /[\d]{2}/g;
 
   return paddedTimeString.match(splitTimeStringRegex) as string[];
